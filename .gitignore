@@ -1,0 +1,28 @@
+# --- Environment Variables (EN KRİTİK) ---
+.env
+.env.local
+.env.*.local
+
+# --- IDE ve Sistem Dosyaları ---
+.idea/
+.vscode/
+*.iml
+.DS_Store
+Thumbs.db
+
+# --- Java / Backend ---
+backend/target/
+*.class
+*.jar
+
+# --- Node / Frontend ---
+frontend/node_modules/
+frontend/build/
+frontend/dist/
+npm-debug.log*
+
+# --- Docker & Database ---
+postgres_data/
+
+# --- Loglar ---
+*.log

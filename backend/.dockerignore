@@ -1,0 +1,10 @@
+# Docker imajına girmemesi gerekenler
+target/
+*.jar
+.git/
+.env
+.mvn/
+.idea/
+.vscode/
+*.iml
+HELP.md

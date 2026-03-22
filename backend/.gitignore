@@ -1,0 +1,31 @@
+# --- Java & Maven ---
+target/
+*.jar
+*.war
+*.ear
+.mvn/wrapper/maven-wrapper.jar
+
+# --- Environment Variables (KRİTİK) ---
+.env
+
+# --- IDEs (IntelliJ, VS Code, STS) ---
+.idea/
+*.iml
+*.iws
+*.ipr
+.vscode/
+.classpath
+.project
+.settings/
+.springBeans
+.sts4-cache
+.factorypath
+.apt_generated
+
+# --- Logs & OS ---
+*.log
+.DS_Store
+Thumbs.db
+
+# --- Documentation ---
+HELP.md

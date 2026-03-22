@@ -1,0 +1,74 @@
+version: '3.8'
+
+services:
+  # 1. Veritabanı (PostgreSQL)
+  db:
+    image: postgres:15
+    container_name: gider-takip-db
+    restart: always
+    environment:
+      - TZ=Europe/Istanbul
+      - POSTGRES_DB=${DB_NAME}
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+    ports:
+      - "5432:5432"
+    networks:
+      - gider-agi
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  # 2. Backend (Spring Boot)
+  backend:
+    build:
+      context: ./backend
+    container_name: gider-takip-backend
+    restart: on-failure
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+    environment:
+      - TZ=Europe/Istanbul
+      # Veritabanı Bağlantısı
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/${DB_NAME}
+      - SPRING_DATASOURCE_USERNAME=${DB_USER}
+      - SPRING_DATASOURCE_PASSWORD=${DB_PASSWORD}
+
+      # Güvenlik ve JWT Ayarları (Yeni değişken isimleriyle tam uyumlu)
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY}
+      - JWT_EXPIRATION=${JWT_EXPIRATION}
+      - JWT_COOKIE_NAME=${JWT_COOKIE_NAME}
+      - JWT_COOKIE_SECURE=${JWT_COOKIE_SECURE}
+      - RESET_EXP=${RESET_EXP}
+
+      # Mail Ayarları
+      - SPRING_MAIL_USERNAME=${SPRING_MAIL_USERNAME}
+      - SPRING_MAIL_PASSWORD=${SPRING_MAIL_PASSWORD}
+
+      # Frontend ve Dosya Ayarları
+      - FRONTEND_URL=${FRONTEND_URL}
+      - UPLOAD_PATH=/app/uploads # Konteyner içindeki mutlak yol
+    networks:
+      - gider-agi
+    volumes:
+      - ./backend/uploads:/app/uploads # ✅ Fiziksel dosyalar burada saklanır
+
+  # 3. Frontend (React)
+  frontend:
+    build:
+      context: ./frontend
+    container_name: gider-takip-frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+    networks:
+      - gider-agi
+
+networks:
+  gider-agi:
+    driver: bridge
+
+volumes:
+  postgres_data:
